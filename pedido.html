@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SÁLVIA | Montar Pedido Premium</title>
+  <!-- Fonts: Outfit + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            salvia: {
+              DEFAULT: '#1B5E20',
+              light: '#2E7D32',
+              soft: '#81C784',
+              cream: '#F1F8E9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React & Babel via CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+  <!-- GSAP for micro-animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #FDFDFD;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .outfit { font-family: 'Outfit', sans-serif; }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* GSAP Entry styles */
+    .reveal { opacity: 0; transform: translateY(20px); }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- Icons Replacement (Lucide to Material Symbols) ---
+    const Icon = ({ name, size = 24, className = "" }) => (
+      <span className={`material-symbols-outlined ${className}`} style={{ fontSize: `${size}px` }}>
+        {name}
+      </span>
+    );
+
+    const ShoppingCart = (props) => <Icon name="shopping_cart" {...props} />;
+    const Plus = (props) => <Icon name="add" {...props} />;
+    const Trash2 = (props) => <Icon name="delete" {...props} />;
+    const CheckCircle = (props) => <Icon name="check_circle" {...props} />;
+    const ArrowRight = (props) => <Icon name="arrow_forward" {...props} />;
+    const ChevronLeft = (props) => <Icon name="chevron_left" {...props} />;
+    const ReceiptText = (props) => <Icon name="receipt_long" {...props} />;
+    const Utensils = (props) => <Icon name="restaurant" {...props} />;
+    // -----------------------------------------------------
+
+    const MENU_DATA = {
+      categories: [
+        { id: 'carnes', label: 'Carnes', hasSides: true },
+        { id: 'frangos', label: 'Frangos', hasSides: true },
+        { id: 'pratos_unicos', label: 'Pratos Únicos', hasSides: false },
+      ],
+      items: {
+        carnes: ['Carne moída', 'Carne desfiada', 'Picadinho', 'Almôndegas ao molho'],
+        frangos: ['Frango desfiado', 'Frango em cubos', 'Frango ao molho', 'Sobrecoxa', 'Fricassé de frango', 'Parmegiana fit', 'Strogonoff fit'],
+        pratos_unicos: ['Panquecas (carne ou frango)', 'Macarrão à bolonhesa', 'Escondidinho de frango e abóbora', 'Escondidinho de carne e batata']
+      },
+      sides: [
+        'Arroz branco', 'Arroz com brócolis', 'Arroz com cenoura', 'Arroz integral',
+        'Arroz integral com brócolis', 'Arroz integral com cenoura', 'Arroz 7 grãos',
+        'Feijão carioca', 'Feijão preto', 'Grão de bico', 'Lentilha', 'Ervilha',
+        'Quinoa', 'Cuscuz marroquino', 'Polenta', 'Purê de batata',
+        'Purê de abóbora', 'Purê de mandioquinha', 'Batatas sauté', 'Mix de legumes'
+      ]
+    };
+
+    const calculatePricing = (totalQty) => {
+      if (totalQty === 0) return 27.0;
+      if (totalQty >= 15) return 21.5;
+      if (totalQty >= 10) return 22.0;
+      if (totalQty >= 5) return 25.0;
+      return 27.0;
+    };
+
+    function App() {
+      const [cart, setCart] = useState([]);
+      const [view, setView] = useState('menu');
+      const [step, setStep] = useState(1);
+      const [customerName, setCustomerName] = useState('');
+      const containerRef = useRef(null);
+
+      const params = new URLSearchParams(window.location.search);
+      const kitGoal = parseInt(params.get('kit') || '0');
+      const minQty = kitGoal >= 10 ? 2 : 1;
+
+      const [currentMeal, setCurrentMeal] = useState({ category: null, protein: '', sides: [], quantity: minQty });
+
+      // GSAP Animations
+      useEffect(() => {
+        gsap.to(".reveal", { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" });
+      }, [view, step]);
+
+      const addToCart = () => {
+        setCart([...cart, { ...currentMeal, id: Date.now() }]);
+        setView('menu');
+        setCurrentMeal({ category: null, protein: '', sides: [], quantity: minQty });
+        setStep(1);
+      };
+
+      const removeFromCart = (id) => setCart(cart.filter(item => item.id !== id));
+      
+      const totalQuantity = cart.reduce((acc, curr) => acc + curr.quantity, 0);
+      const pricePerUnit = calculatePricing(totalQuantity);
+      const totalPrice = totalQuantity * pricePerUnit;
+
+      return (
+        <div className="min-h-screen bg-[#FDFDFD] text-slate-800 font-sans pb-32 overflow-x-hidden">
+          {/* Navbar Estilo Landing Page */}
+          <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 sticky top-0 z-50">
+            <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4">
+              <div className="flex items-center gap-2">
+                <img src="assets/salvia_logo.png" alt="SÁLVIA Logo" className="h-14 w-auto" />
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right hidden sm:block">
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Total Pedido</p>
+                  <p className="text-lg font-black text-salvia outfit">R$ {totalPrice.toFixed(2).replace('.', ',')}</p>
+                </div>
+                <div className="bg-salvia text-white p-2.5 rounded-2xl relative shadow-lg shadow-salvia/20">
+                  <ShoppingCart size={22} />
+                  {totalQuantity > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-black border-2 border-white">
+                      {totalQuantity}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main className="max-w-lg mx-auto p-6 space-y-8" ref={containerRef}>
+            {/* Boas-vindas Personalizada */}
+            <div className="reveal space-y-1">
+              <h1 className="text-3xl font-black text-slate-900 outfit leading-tight">Monte seu cardápio personalizado</h1>
+              <p className="text-slate-500 text-sm">Escolha suas proteínas e acompanhamentos favoritos.</p>
+            </div>
+
+            {view === 'menu' && (
+              <div className="space-y-6">
+                {/* Nome do Cliente com Design Glass */}
+                <div className="reveal glass p-6 rounded-[2rem] shadow-sm border border-slate-100 transition-all hover:border-salvia/30">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Para começarmos, qual seu nome?</label>
+                  <input 
+                    type="text" 
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Ex: Mariana Santos"
+                    className="w-full border-none p-0 text-xl font-bold text-salvia placeholder:text-slate-200 focus:ring-0 bg-transparent outfit"
+                  />
+                </div>
+
+                {/* Lista de Marmitas no Carrinho */}
+                {cart.length > 0 && (
+                  <div className="reveal space-y-3">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest px-2">Itens no seu kit</h3>
+                    {cart.map((item) => (
+                      <div key={item.id} className="bg-white p-4 rounded-3xl border border-slate-100 flex justify-between items-center group shadow-sm transition-all hover:shadow-md">
+                        <div className="flex-1">
+                          <span className="text-salvia font-black text-lg mr-2 outfit">{item.quantity}x</span>
+                          <span className="font-bold text-slate-800">{item.protein}</span>
+                          <p className="text-[10px] text-slate-400 mt-0.5 uppercase font-medium">{item.sides.join(' + ') || 'Sem acompanhamentos'}</p>
+                        </div>
+                        <button onClick={() => removeFromCart(item.id)} className="text-slate-200 hover:text-red-500 transition-colors p-2">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Botão de Montagem Estilo Hero */}
+                <button
+                  onClick={() => setView('building')}
+                  className="reveal w-full bg-gradient-to-br from-salvia to-salvia-light text-white rounded-[2.5rem] py-8 flex flex-col items-center gap-2 shadow-2xl shadow-salvia/20 transition-all active:scale-95 group"
+                >
+                  <div className="bg-white/20 p-3 rounded-full group-hover:scale-110 transition-transform">
+                    <Plus size={32} />
+                  </div>
+                  <span className="text-xl font-black outfit">Montar Nova Marmita</span>
+                  <span className="text-xs text-white/70 italic font-medium">Proteína + Acompanhamentos</span>
+                </button>
+
+                {totalQuantity > 0 && (
+                   <button
+                   onClick={() => setView('summary')}
+                   className="reveal w-full bg-white border-2 border-salvia text-salvia rounded-[2.5rem] py-5 font-black outfit flex items-center justify-center gap-3 transition-all hover:bg-salvia/5"
+                 >
+                   <ReceiptText size={22} />
+                   Ver Resumo e Enviar
+                 </button>
+                )}
+
+                {/* Tabela de Preços Dinâmica */}
+                <div className="reveal grid grid-cols-2 gap-3">
+                  {[
+                    { qty: 'Até 4', price: '27,00' },
+                    { qty: '5 a 9', price: '25,00' },
+                    { qty: '10 a 14', price: '22,00' },
+                    { qty: '15+', price: '21,50', elite: true }
+                  ].map(p => (
+                    <div key={p.qty} className={`p-4 rounded-3xl border text-center transition-all ${p.elite ? 'bg-salvia-cream border-salvia/30 text-salvia' : 'bg-white border-slate-100 hover:border-salvia/20'}`}>
+                      <p className="font-black text-xl outfit leading-none mb-1">R$ {p.price}</p>
+                      <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">{p.qty} Unidades</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {view === 'building' && (
+              <div className="space-y-6">
+                {/* Cabeçalho do seletor */}
+                <div className="reveal flex justify-between items-center mb-4">
+                  <button onClick={() => step === 1 ? setView('menu') : setStep(step - 1)} className="p-2 text-slate-400 bg-white shadow-sm rounded-full active:scale-90 transition-transform">
+                    <ChevronLeft size={24} />
+                  </button>
+                  <div className="flex gap-2.5">
+                    {[1, 2, 3, 4].map(s => (
+                      <div key={s} className={`h-1.5 w-10 rounded-full transition-all duration-500 ${step >= s ? 'bg-salvia shadow-[0_0_8px_rgba(27,94,32,0.4)]' : 'bg-slate-100'}`} />
+                    ))}
+                  </div>
+                  <div className="w-8" />
+                </div>
+
+                <div className="min-h-[400px]">
+                  {step === 1 && (
+                    <div className="reveal space-y-5">
+                      <h2 className="text-2xl font-black text-slate-800 outfit">O que teremos hoje?</h2>
+                      <div className="grid gap-3">
+                        {MENU_DATA.categories.map(cat => (
+                          <button
+                            key={cat.id}
+                            onClick={() => { setCurrentMeal({ ...currentMeal, category: cat }); setStep(2); }}
+                            className="bg-white p-6 rounded-3xl border-2 border-slate-50 text-left hover:border-salvia transition-all flex justify-between items-center group active:bg-salvia-cream"
+                          >
+                            <span className="text-lg font-bold text-slate-700">{cat.label}</span>
+                            <div className="bg-slate-50 p-2 rounded-full group-hover:bg-salvia group-hover:text-white transition-all">
+                                <ArrowRight size={20} />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 2 && (
+                    <div className="reveal space-y-5">
+                      <h2 className="text-2xl font-black text-slate-800 outfit">Escolha sua proteína:</h2>
+                      <div className="grid gap-2 max-h-[450px] overflow-y-auto pr-2 custom-scroll">
+                        {MENU_DATA.items[currentMeal.category.id].map(item => (
+                          <button
+                            key={item}
+                            onClick={() => { setCurrentMeal({ ...currentMeal, protein: item }); setStep(currentMeal.category.hasSides ? 3 : 4); }}
+                            className="p-5 rounded-2xl text-left border-2 border-slate-50 hover:border-salvia hover:bg-salvia-cream font-bold text-slate-700 transition-all active:scale-[0.98]"
+                          >
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 3 && (
+                    <div className="reveal space-y-6">
+                      <div className="flex justify-between items-center">
+                        <h2 className="text-2xl font-black text-slate-800 outfit">Acompanhamentos</h2>
+                        <span className="bg-salvia-light text-white text-xs font-black px-4 py-1 rounded-full">{currentMeal.sides.length}/2</span>
+                      </div>
+                      <div className="grid gap-2 max-h-[350px] overflow-y-auto pr-2">
+                        {MENU_DATA.sides.map(side => (
+                          <button
+                            key={side}
+                            onClick={() => {
+                                if (currentMeal.sides.includes(side)) {
+                                    setCurrentMeal({ ...currentMeal, sides: currentMeal.sides.filter(s => s !== side) });
+                                } else if (currentMeal.sides.length < 2) {
+                                    setCurrentMeal({ ...currentMeal, sides: [...currentMeal.sides, side] });
+                                }
+                            }}
+                            className={`p-4 rounded-2xl text-left border-2 transition-all flex justify-between items-center ${currentMeal.sides.includes(side) ? 'border-salvia bg-salvia-cream text-salvia font-black' : 'border-slate-50 text-slate-600 hover:border-slate-200'}`}
+                          >
+                            {side}
+                            {currentMeal.sides.includes(side) && <CheckCircle size={18} className="text-salvia" />}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        disabled={currentMeal.sides.length !== 2}
+                        onClick={() => setStep(4)}
+                        className={`w-full py-5 rounded-3xl font-black outfit text-white transition-all text-lg shadow-xl ${currentMeal.sides.length === 2 ? 'bg-salvia shadow-salvia/20' : 'bg-slate-200 cursor-not-allowed'}`}
+                      >
+                        Próximo passo
+                      </button>
+                    </div>
+                  )}
+
+                  {step === 4 && (
+                    <div className="reveal space-y-10 py-10 text-center">
+                      <div className="space-y-2">
+                        <h2 className="text-3xl font-black text-slate-800 outfit">Quantas unidades?</h2>
+                        {minQty > 1 && <p className="text-xs text-orange-600 font-black uppercase tracking-widest bg-orange-50 inline-block px-4 py-1 rounded-full">Mínimo de {minQty} un. por kit</p>}
+                      </div>
+                      <div className="flex items-center justify-center gap-10">
+                        <button onClick={() => setCurrentMeal({ ...currentMeal, quantity: Math.max(minQty, currentMeal.quantity - 1) })} className="w-16 h-16 rounded-full border-2 border-slate-200 flex items-center justify-center text-3xl font-black text-slate-300 hover:text-salvia hover:border-salvia transition-all shadow-sm active:bg-salvia-cream"> – </button>
+                        <span className="text-8xl font-black text-salvia outfit">{currentMeal.quantity}</span>
+                        <button onClick={() => setCurrentMeal({ ...currentMeal, quantity: currentMeal.quantity + 1 })} className="w-16 h-16 rounded-full border-2 border-slate-200 flex items-center justify-center text-3xl font-black text-slate-300 hover:text-salvia hover:border-salvia transition-all shadow-sm active:bg-salvia-cream"> + </button>
+                      </div>
+                      <button onClick={addToCart} className="w-full bg-salvia py-6 rounded-3xl font-black outfit text-white text-xl shadow-2xl shadow-salvia/30 transform transition-all active:scale-95"> Confirmar Escolha </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {view === 'summary' && (
+              <div className="glass rounded-[2.5rem] shadow-2xl overflow-hidden border border-white">
+                <div className="bg-salvia p-10 text-white text-center flex flex-col items-center">
+                  <div className="bg-white/10 p-4 rounded-full mb-4">
+                    <ReceiptText size={48} className="opacity-90" />
+                  </div>
+                  <h2 className="text-3xl font-black outfit tracking-tight">RESUMO FINAL</h2>
+                  <p className="text-salvia-soft text-sm font-medium mt-1">Quase pronto, {customerName}!</p>
+                </div>
+
+                <div className="p-8 space-y-8">
+                  <div className="space-y-4 max-h-[300px] overflow-y-auto px-1 custom-scroll">
+                    {cart.map((item, idx) => (
+                      <div key={idx} className="flex gap-4 items-center p-5 bg-white rounded-3xl border border-slate-50 shadow-sm relative group">
+                        <div className="h-12 w-12 rounded-2xl bg-salvia text-white flex items-center justify-center font-black outfit flex-shrink-0 text-xl">
+                            {item.quantity}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-black text-slate-800 text-sm uppercase outfit leading-none mb-1">{item.protein}</p>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.sides.join(' | ')}</p>
+                        </div>
+                        <button onClick={() => removeFromCart(item.id)} className="text-slate-200 hover:text-red-500 transition-colors p-2">
+                          <Trash2 size={20} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-salvia-cream p-8 rounded-[2rem] border-2 border-salvia/20 space-y-2">
+                    <div className="flex justify-between text-[11px] font-black text-salvia/60 uppercase tracking-widest">
+                      <span>Preço p/ unidade:</span>
+                      <span>R$ {pricePerUnit.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <div className="flex justify-between font-black text-3xl text-salvia pt-4 border-t border-salvia/10 outfit">
+                      <span>TOTAL:</span>
+                      <span>R$ {totalPrice.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                        const saudação = customerName.trim() ? `Meu nome é *${customerName.trim()}* e e` : 'E';
+                        const text = `*NOVO PEDIDO SÁLVIA PREMIUM*\n\n${saudação}ste é meu pedido personalizado:\n\n${cart.map(i => `- *${i.quantity}x ${i.protein.toUpperCase()}*${i.sides.length > 0 ? `\n   (_Acomp: ${i.sides.join(' + ')})_` : ''}`).join('\n\n')}\n\n*VALOR TOTAL: R$ ${totalPrice.toFixed(2).replace('.', ',')}*\n_Qtde Total: ${totalQuantity} marmitas_`;
+                        window.open(`https://wa.me/5561983693411?text=${encodeURIComponent(text)}`);
+                    }}
+                    className="w-full bg-salvia hover:bg-salvia-light text-white py-6 rounded-3xl font-black outfit text-xl shadow-2xl shadow-salvia/30 flex items-center justify-center gap-4 transition-all"
+                  >
+                    Enviar Pedido via WhatsApp
+                  </button>
+                  <button onClick={() => setView('menu')} className="w-full text-slate-400 font-bold text-sm hover:text-salvia transition-colors">Voltar e Ajustar itens</button>
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* Floater Informativo Premium */}
+          {totalQuantity > 0 && view !== 'summary' && (
+            <div className="fixed bottom-6 left-6 right-6 z-40 bg-white/90 backdrop-blur-xl border border-slate-100 p-6 rounded-[2.5rem] shadow-2xl flex justify-between items-center max-w-lg mx-auto transform transition-all hover:scale-[1.02]">
+              <div>
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Subtotal ({totalQuantity})</p>
+                <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-salvia outfit">R$ {totalPrice.toFixed(2).replace('.', ',')}</span>
+                </div>
+              </div>
+              <button onClick={() => setView('summary')} className="bg-salvia text-white px-8 py-4 rounded-3xl font-black outfit text-sm shadow-xl shadow-salvia/20 active:scale-95 transition-all">Finalizar</button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
