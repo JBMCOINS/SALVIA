@@ -23,6 +23,7 @@
   --radius-lg: 32px;
   
   --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Typography Reset */
@@ -43,6 +44,25 @@ body {
   background-color: var(--bg-color);
   line-height: 1.7;
   overflow-x: hidden;
+  width: 100%;
+}
+
+#smooth-wrapper {
+  overflow: visible !important;
+  width: 100%;
+}
+
+body.js-ready #smooth-wrapper {
+  overflow: hidden !important;
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+#smooth-content {
+  overflow: visible;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -250,7 +270,177 @@ h1, h2, h3, h4, h5, h6 {
 .section-subtitle {
   font-size: 1.25rem;
   color: var(--text-light);
-  margin-bottom: 2rem; /* Reduzido de 3rem */
+  margin-bottom: 2rem;
+}
+
+/* Raio-X Section */
+.raio-x {
+  background-color: var(--bg-light);
+  overflow: hidden;
+  position: relative;
+}
+
+.raio-x-container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  min-height: 100vh;
+  gap: 4rem;
+  padding: 100px 24px;
+}
+
+.raio-x-visual {
+  position: relative;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.raio-x-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 550px;
+  z-index: 5;
+}
+
+.raio-x-main-img {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: block;
+}
+
+/* SVG Lines */
+.raio-x-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.connection-line {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  opacity: 0.6;
+}
+
+/* Etiquetas */
+.x-label {
+  position: absolute;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius);
+  max-width: 280px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateX(30px);
+  z-index: 10;
+}
+
+.x-label .dot {
+  width: 12px;
+  height: 12px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px var(--primary-light);
+}
+
+.x-label h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  color: var(--primary);
+}
+
+.x-label p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-light);
+}
+
+.label-protein { top: 10%; right: -30%; }
+.label-carb { top: 40%; right: -35%; }
+.label-veg { bottom: 10%; right: -30%; }
+
+.raio-x-text-content {
+  padding-left: 2rem;
+}
+
+.sticky-text {
+  position: sticky;
+  top: 150px;
+}
+
+.scroll-instruction {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.scroll-instruction .material-symbols-outlined {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+  40% {transform: translateY(-5px);}
+  60% {transform: translateY(-3px);}
+}
+
+@media (max-width: 992px) {
+  .raio-x-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 24px;
+    height: auto;
+    min-height: auto;
+    gap: 2rem;
+  }
+  
+  .raio-x-visual {
+    height: auto;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .raio-x-image-wrapper {
+    max-width: 100%;
+  }
+  
+  .x-label {
+    position: relative;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    margin: 1.5rem 0;
+    max-width: 100%;
+    opacity: 1 !important;
+    transform: none !important;
+    text-align: left;
+    display: flex;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .raio-x-svg { display: none; }
+  .sticky-text { position: static; text-align: center; }
+  .raio-x-text-content { padding-left: 0; margin-bottom: 2rem; }
+  .scroll-instruction { display: none; }
 }
 
 /* Problema Cards */
@@ -417,7 +607,8 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 992px) {
   .nav-links { display: none; }
   .hero-container { grid-template-columns: 1fr; text-align: center; }
-  .hero h1 { font-size: 2.8rem; } /* Ligeiramente menor */
+  .hero { padding-top: 100px; padding-bottom: 40px; }
+  .hero h1 { font-size: 2.2rem; letter-spacing: -1.5px; }
   .hero p { margin: 0 auto 2.5rem; font-size: 1.1rem; }
   .hero-img { transform: rotate(0); }
   .planos-grid { grid-template-columns: 1fr; max-width: 450px; margin: 0 auto; gap: 1.5rem; }
@@ -425,14 +616,27 @@ h1, h2, h3, h4, h5, h6 {
   .solucao-flex { flex-direction: column-reverse; text-align: center; gap: 3rem; }
   .section-padding { padding: 60px 0; }
   .section-title { font-size: 2.2rem; }
-}
-
-@media (max-width: 480px) {
-  .hero { padding-top: 100px; padding-bottom: 40px; }
-  .hero h1 { font-size: 2.2rem; letter-spacing: -1.5px; }
   .btn { width: 100%; padding: 1.2rem; }
-  .metric-card { display: none; } /* Remover card flutuante no mobile para limpar o visual */
+  .metric-card { display: none; }
   .problema-grid { grid-template-columns: 1fr; gap: 1rem; min-height: auto; }
+  
+  .navbar {
+    position: absolute; /* Rola com a página, não fica fixa */
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    background: transparent;
+    backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .logo img {
+    height: 30px; /* Logo mais minimalista */
+  }
+}
   .problema-card { padding: 2rem 1.5rem; }
   .footer-grid { grid-template-columns: 1fr !important; gap: 2rem; }
   .section-subtitle { margin-bottom: 1.5rem; font-size: 1.1rem; }
