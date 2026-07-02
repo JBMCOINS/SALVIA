@@ -146,6 +146,12 @@
 
       const removeFromCart = (id) => setCart(cart.filter(item => item.id !== id));
       
+      const updateQuantity = (id, delta) => {
+        setCart(cart.map(item => 
+          item.id === id ? { ...item, quantity: Math.max(2, item.quantity + delta) } : item
+        ));
+      };
+      
       const totalQuantity = cart.reduce((acc, curr) => acc + curr.quantity, 0);
       const pricePerUnit = calculatePricing(totalQuantity);
       const totalPrice = totalQuantity * pricePerUnit;
@@ -206,10 +212,26 @@
                     </div>
                     {cart.map((item) => (
                       <div key={item.id} className="bg-white p-4 rounded-3xl border border-slate-100 flex justify-between items-center group shadow-sm transition-all hover:shadow-md">
-                        <div className="flex-1">
-                          <span className="text-salvia font-black text-lg mr-2 outfit">{item.quantity}x</span>
-                          <span className="font-bold text-slate-800">{item.protein}</span>
-                          <p className="text-[10px] text-slate-400 mt-0.5 uppercase font-medium">{item.sides.join(' + ') || 'Sem acompanhamentos'}</p>
+                        <div className="flex items-center gap-4">
+                          {/* Seletor de Qtd no Carrinho */}
+                          <div className="flex flex-col items-center bg-salvia-cream rounded-2xl p-1 px-2 border border-salvia/10">
+                            <button onClick={() => updateQuantity(item.id, 1)} className="text-salvia hover:scale-125 transition-transform">
+                                <Icon name="add" size={16} />
+                            </button>
+                            <span className="text-salvia font-black text-sm outfit leading-none py-1">{item.quantity}x</span>
+                            <button 
+                              onClick={() => updateQuantity(item.id, -1)} 
+                              disabled={item.quantity <= 2}
+                              className={`${item.quantity <= 2 ? 'text-slate-300' : 'text-salvia'} hover:scale-125 transition-transform`}
+                            >
+                                <Icon name="remove" size={16} />
+                            </button>
+                          </div>
+                          
+                          <div>
+                            <span className="font-bold text-slate-800">{item.protein}</span>
+                            <p className="text-[10px] text-slate-400 mt-0.5 uppercase font-medium">{item.sides.join(' + ') || 'Sem acompanhamentos'}</p>
+                          </div>
                         </div>
                         <button onClick={() => removeFromCart(item.id)} className="text-slate-200 hover:text-red-500 transition-colors p-2">
                           <Trash2 size={18} />
@@ -389,12 +411,13 @@
                   <p className="text-salvia-soft text-sm font-medium mt-1">Quase pronto, {customerName}!</p>
                 </div>
 
-                <div className="p-8 space-y-8">
-                  <div className="space-y-4 max-h-[300px] overflow-y-auto px-1 custom-scroll">
+                                 <div className="space-y-4 max-h-[300px] overflow-y-auto px-1 custom-scroll">
                     {cart.map((item, idx) => (
                       <div key={idx} className="flex gap-4 items-center p-5 bg-white rounded-3xl border border-slate-50 shadow-sm relative group">
-                        <div className="h-12 w-12 rounded-2xl bg-salvia text-white flex items-center justify-center font-black outfit flex-shrink-0 text-xl">
-                            {item.quantity}
+                        <div className="flex flex-col items-center bg-salvia p-2 rounded-2xl text-white gap-1">
+                            <button onClick={() => updateQuantity(item.id, 1)} className="hover:scale-125 transition-transform"><Plus size={14} /></button>
+                            <span className="font-black outfit text-sm leading-none">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, -1)} disabled={item.quantity <= 2} className={`transition-all ${item.quantity <= 2 ? 'opacity-30' : 'hover:scale-125'}`}><Icon name="remove" size={14} /></button>
                         </div>
                         <div className="flex-1">
                           <p className="font-black text-slate-800 text-sm uppercase outfit leading-none mb-1">{item.protein}</p>
