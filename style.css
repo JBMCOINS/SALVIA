@@ -540,6 +540,18 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 0.25rem;
 }
 
+.pagamento-info {
+  width: fit-content;
+  margin: 3rem auto 0;
+  padding: 1rem 2.5rem;
+  background: var(--secondary-light);
+  border-radius: 50px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+}
+
 /* Depoimentos */
 .depoimento-card {
   padding: 3rem;
