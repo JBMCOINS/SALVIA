@@ -1,0 +1,2 @@
+# Documentos internos (specs/planos) nao sao paginas do site
+/docs/*  /index.html  404!

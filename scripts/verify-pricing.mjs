@@ -29,5 +29,28 @@ for (const [q, exp] of totalCases) {
   const got = q * calculatePricing(q);
   if (Math.abs(got - exp) > 1e-9) { console.error(`FAIL total q=${q}: esperado ${exp}, obtido ${got}`); fails++; }
 }
+
+// A tabela visual deve renderizar de [...PRICING_TIERS] (spread) — sem o spread,
+// reverse() mutaria o array e calculatePricing passaria a cobrar 29,00 sempre.
+if (!html.includes('[...PRICING_TIERS].reverse()')) {
+  console.error('FAIL: tabela visual nao renderiza de [...PRICING_TIERS].reverse() em pedido.html');
+  fails++;
+}
+
+// Os precos dos kits exibidos na landing devem bater com calculatePricing.
+const landing = readFileSync(join(root, 'index.html'), 'utf8');
+for (const [q, valor, centavo] of [[10, 240, ',00'], [15, 352, ',50'], [20, 460, ',00']]) {
+  const total = q * calculatePricing(q);
+  const esperado = `<span class="valor">R$ ${valor}</span><span class="centavo">${centavo}</span>`;
+  if (total !== valor + Number(centavo.replace(',', '.'))) {
+    console.error(`FAIL landing kit ${q}: card mostra ${valor}${centavo}, calculo da faixa da ${total}`);
+    fails++;
+  }
+  if (!landing.includes(esperado)) {
+    console.error(`FAIL landing kit ${q}: trecho esperado nao encontrado em index.html: ${esperado}`);
+    fails++;
+  }
+}
+
 if (fails > 0) process.exit(1);
-console.log(`PASS: ${unitCases.length + totalCases.length} casos ok`);
+console.log(`PASS: ${unitCases.length + totalCases.length} casos de preco + fonte unica da tabela + 3 kits da landing ok`);
