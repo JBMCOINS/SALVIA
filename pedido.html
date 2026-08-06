@@ -112,13 +112,17 @@
       ]
     };
 
-    const calculatePricing = (totalQty) => {
-      if (totalQty === 0) return 27.0;
-      if (totalQty >= 15) return 21.5;
-      if (totalQty >= 10) return 22.0;
-      if (totalQty >= 5) return 25.0;
-      return 27.0;
-    };
+    // Fonte unica de precos (vigencia 03/08/26): alimenta a cobranca E a tabela exibida.
+    // Ordenado da maior faixa para a menor — find() pega a primeira faixa cujo min cabe na qtd.
+    const PRICING_TIERS = [
+      { min: 20, label: '20 ou mais', price: 23.0, elite: true },
+      { min: 15, label: '15 a 19',    price: 23.5 },
+      { min: 10, label: '10 a 14',    price: 24.0 },
+      { min: 5,  label: '5 a 9',      price: 27.0 },
+      { min: 1,  label: 'Até 4',      price: 29.0 },
+    ];
+    const calculatePricing = (totalQty) =>
+      (PRICING_TIERS.find(t => totalQty >= t.min) ?? PRICING_TIERS[PRICING_TIERS.length - 1]).price;
 
     function App() {
       const [cart, setCart] = useState([]);
@@ -127,8 +131,6 @@
       const [customerName, setCustomerName] = useState('');
       const containerRef = useRef(null);
 
-      const params = new URLSearchParams(window.location.search);
-      const kitGoal = parseInt(params.get('kit') || '0');
       const getInitialMinQty = () => 2;
       const [currentMeal, setCurrentMeal] = useState({ category: null, protein: '', sides: [], quantity: getInitialMinQty() });
 
@@ -265,15 +267,10 @@
 
                 {/* Tabela de Preços Dinâmica */}
                 <div className="reveal grid grid-cols-2 gap-3">
-                  {[
-                    { qty: 'Até 4', price: '27,00' },
-                    { qty: '5 a 9', price: '25,00' },
-                    { qty: '10 a 14', price: '22,00' },
-                    { qty: '15+', price: '21,50', elite: true }
-                  ].map(p => (
-                    <div key={p.qty} className={`p-4 rounded-3xl border text-center transition-all ${p.elite ? 'bg-salvia-cream border-salvia/30 text-salvia' : 'bg-white border-slate-100 hover:border-salvia/20'}`}>
-                      <p className="font-black text-xl outfit leading-none mb-1">R$ {p.price}</p>
-                      <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">{p.qty} Unidades</p>
+                  {[...PRICING_TIERS].reverse().map(p => (
+                    <div key={p.label} className={`p-4 rounded-3xl border text-center transition-all ${p.elite ? 'col-span-2 bg-salvia-cream border-salvia/30 text-salvia' : 'bg-white border-slate-100 hover:border-salvia/20'}`}>
+                      <p className="font-black text-xl outfit leading-none mb-1">R$ {p.price.toFixed(2).replace('.', ',')}</p>
+                      <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">{p.label} Unidades</p>
                     </div>
                   ))}
                 </div>
