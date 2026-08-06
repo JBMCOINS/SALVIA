@@ -534,6 +534,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit';
 }
 
+.preco-obs {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}
+
 /* Depoimentos */
 .depoimento-card {
   padding: 3rem;
