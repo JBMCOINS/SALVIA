@@ -17,6 +17,11 @@ export function formatarReais(valor) {
   return `R$ ${inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${centavos}`;
 }
 
+// Escada de preços: "31", "25,50" (sem "R$" e sem ",00").
+export function formatarPrecoCurto(valor) {
+  return Number.isInteger(valor) ? String(valor) : valor.toFixed(2).replace('.', ',');
+}
+
 export function faixaDe(quantidade) {
   if (quantidade < 1) return null;
   return PRICING_TIERS.find((t) => quantidade >= t.min) ?? null;

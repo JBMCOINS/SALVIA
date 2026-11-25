@@ -9,11 +9,11 @@ export const ACOMPANHAMENTOS_POR_PRATO = 2;
 // Ordenado da MAIOR faixa para a menor: o preço é o da primeira faixa cujo `min` cabe na quantidade.
 // `label` é o texto curto da faixa de preços em pedido.html (há teste garantindo que o HTML bate com isto).
 export const PRICING_TIERS = [
-  { min: 20, label: '20+',   price: 25.0 },
-  { min: 15, label: '15–19', price: 25.5 },
-  { min: 10, label: '10–14', price: 26.0 },
-  { min: 5,  label: '5–9',   price: 29.0 },
-  { min: 1,  label: '1–4',   price: 31.0 },
+  { min: 20, label: '20 ou +', price: 25.0 },
+  { min: 15, label: '15 a 19', price: 25.5 },
+  { min: 10, label: '10 a 14', price: 26.0 },
+  { min: 5,  label: '5 a 9',   price: 29.0 },
+  { min: 1,  label: '1 a 4',   price: 31.0 },
 ];
 
 export const CATEGORIAS = [

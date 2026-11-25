@@ -66,7 +66,16 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
    - o link "Dúvidas sobre entrega? Fale com a gente no WhatsApp".
 
    O princípio é um pedido **muito fácil, simples e direto**. **Nenhum link de WhatsApp antes do pedido:** a dúvida chega junto com o pedido já enviado. Um link antes abre a conversa e leva ao pedido "manual" digitado no chat. Há um teste que garante isso.
-4. **Preços:** **Quanto mais, menor o preço de cada uma**, com as 5 faixas lado a lado. Quando já há itens no pedido, a faixa em que ele está fica destacada.
+4. **Preços: escada de preços** (escolhida pelo usuário entre 3 direções, no companheiro visual).
+   - **Título:** **Leve mais, pague menos por marmita**, em 17 px, negrito e preto. Logo abaixo, o apoio *Preço por marmita, em R$*.
+   - **Degraus:** as 5 faixas são degraus que **descem de altura** (88 → 78 → 64 → 60 → 56 px) e **esquentam de cor**, do neutro ao laranja: `--degrau-1` a `--degrau-4`, e `--laranja` no melhor preço.
+     - Cada degrau tem o número grande no topo, sem "R$" e sem ",00": 31 · 29 · 26 · 25,50 · 25.
+     - A quantidade fica embaixo do degrau: 1 a 4 · 5 a 9 · 10 a 14 · 15 a 19 · **20 ou +**.
+   - **Selo "melhor preço"** sobre o degrau do 20 ou +. Em telas com menos de 360 px, ele se alinha pela direita, para não passar da borda.
+   - **Com itens no pedido:** o degrau atual ganha contorno preto e o selo **"seu pedido"**. No 20 ou +, só o contorno, porque o selo "melhor preço" continua.
+   - **Linha de economia:** "20 ou mais: **R$ 6 a menos em cada marmita**", em verde.
+   - **Leitor de tela:** cada faixa é lida como "1 a 4 marmitas: R$ 31 cada", com texto invisível na tela.
+   - Os rótulos e números vêm de `PRICING_TIERS` (`label` e `formatarPrecoCurto`), e um teste confere que o HTML bate com eles.
 5. **Mais pedidos** / *Os favoritos dos clientes*: 4 cartões com a combinação escrita.
    - O botão **Adicionar 2** adiciona 2 unidades. O texto evita o "+2" sozinho, que pode não ser entendido de primeira.
    - Se o combo já está no pedido, o cartão mostra o seletor de quantidade (ver "Seletor de quantidade").
@@ -179,7 +188,7 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
 
 ### Primeira tela
 
-- **Num celular de 375×667 (iPhone SE/8), já descontadas as barras do navegador do Instagram, o primeiro cartão de "Mais pedidos" aparece sem rolar.** Quem chega quer ver comida. Por isso o topo tem só o título e a faixa compacta de preços; com isso, cabem 2 cartões inteiros.
+- **Num celular de 375×667 (iPhone SE/8), já descontadas as barras do navegador do Instagram, o primeiro cartão de "Mais pedidos" aparece sem rolar.** Quem chega quer ver comida. Por isso o topo tem só o título e a escada de preços. Com a escada, cabe 1 cartão inteiro mais o começo do segundo em 375 px: uma troca aceita pelo usuário, que preferiu mais destaque para o preço. Em 320 px o primeiro cartão fica parcialmente abaixo da dobra.
 - **O HTML já chega com o conteúdo fixo escrito:** cabeçalho, título e preços. O JavaScript só monta as listas. Não há tela em branco nem animação de entrada escondendo conteúdo. Hoje a página começa com tudo invisível até a animação rodar.
 
 ### Toque e retorno visual

@@ -10,7 +10,7 @@ const todosAcompanhamentos = GRUPOS_ACOMPANHAMENTOS.flatMap((g) => g.itens);
 test('faixas de preço em ordem decrescente com os valores combinados', () => {
   assert.deepEqual(
     PRICING_TIERS.map((t) => [t.min, t.label, t.price]),
-    [[20, '20+', 25], [15, '15–19', 25.5], [10, '10–14', 26], [5, '5–9', 29], [1, '1–4', 31]],
+    [[20, '20 ou +', 25], [15, '15 a 19', 25.5], [10, '10 a 14', 26], [5, '5 a 9', 29], [1, '1 a 4', 31]],
   );
 });
 

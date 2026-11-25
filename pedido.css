@@ -4,6 +4,10 @@
   --laranja-escuro: #9A3412;
   --laranja-vivo: #EA580C;
   --laranja-claro: #FFF7ED;
+  --degrau-1: #F4F1EE;           /* escada de preços: do neutro ao laranja */
+  --degrau-2: #FDEBD9;
+  --degrau-3: #FBD3AE;
+  --degrau-4: #F6A66B;
   --laranja-sobre-escuro: #FDBA74;
   --verde: #1B5E20;
   --texto: #1A1A1A;
@@ -55,6 +59,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -93,18 +98,30 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 }
 
 .precos { margin-top: var(--e-4); }
-.rotulo { margin-bottom: var(--e-2); font-size: var(--t-rotulo); font-weight: 500; color: var(--texto-3); }
-.faixas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--e-1); }
-.faixa {
-  display: flex; flex-direction: column; align-items: center;
-  padding: var(--e-2) 0;
-  border: 1px solid var(--borda); border-radius: var(--raio-escolha);
-  text-align: center;
+.precos-titulo { font-size: var(--t-prato); font-weight: 700; }
+.precos-sub { font-size: var(--t-rotulo); color: var(--texto-2); }
+/* Escada: degraus descem e esquentam de cor até o melhor preço. DOM: quantidade antes do preço (leitor de tela); visual: preço em cima. */
+.faixas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; align-items: end; padding-top: 30px; }
+.faixa { display: flex; flex-direction: column-reverse; text-align: center; }
+.faixa-qtd { margin-top: var(--e-1); font-size: var(--t-minimo); color: var(--texto-3); }
+.faixa-degrau { position: relative; padding-top: var(--e-2); border-radius: var(--raio-escolha) var(--raio-escolha) 6px 6px; }
+.faixa-preco { font-size: clamp(var(--t-apoio), 5.4vw, var(--t-secao)); font-weight: 700; }
+.faixa:nth-child(1) .faixa-degrau { height: 88px; background: var(--degrau-1); }
+.faixa:nth-child(2) .faixa-degrau { height: 78px; background: var(--degrau-2); }
+.faixa:nth-child(3) .faixa-degrau { height: 64px; background: var(--degrau-3); }
+.faixa:nth-child(4) .faixa-degrau { height: 60px; background: var(--degrau-4); }
+.faixa.melhor .faixa-degrau { height: 56px; background: var(--laranja); color: var(--fundo); }
+.faixa.melhor .faixa-qtd { color: var(--laranja); font-weight: 700; }
+.faixa-selo, .faixa.atual:not(.melhor) .faixa-degrau::before {
+  position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+  padding: 2px 7px; border-radius: var(--raio-pilula); white-space: nowrap;
+  background: var(--laranja); color: var(--fundo); font-size: var(--t-minimo); font-weight: 700;
 }
-.faixa-qtd { font-size: var(--t-minimo); color: var(--texto-3); }
-.faixa-preco { font-size: var(--t-rotulo); font-weight: 700; }
-.faixa.atual { border: 2px solid var(--laranja-vivo); background: var(--laranja-claro); padding: calc(var(--e-2) - 1px) 0; }
-.faixa.atual .faixa-preco { color: var(--laranja); }
+@media (max-width: 359px) { .faixa.melhor .faixa-selo { left: auto; right: 0; transform: none; } }
+.faixa.atual .faixa-degrau { outline: 3px solid var(--texto); outline-offset: 2px; }
+.faixa.atual:not(.melhor) .faixa-degrau::before { content: 'seu pedido'; background: var(--texto); }
+.precos-economia { margin-top: var(--e-2); font-size: var(--t-apoio); color: var(--texto-2); }
+.precos-economia strong { color: var(--verde); }
 
 .secao { margin-top: var(--e-5); }
 .titulo-secao { font-family: var(--fonte-titulo); font-size: var(--t-secao); font-weight: 700; line-height: 1.2; }

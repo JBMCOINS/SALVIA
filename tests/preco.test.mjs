@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { formatarReais, faixaDe, precoUnitario, resumoValores, avisoFaixa } from '../pedido-regras.js';
+import { formatarReais, formatarPrecoCurto, faixaDe, precoUnitario, resumoValores, avisoFaixa } from '../pedido-regras.js';
 
 const pedidoDe = (quantidade) => [{ prato: 'X', acompanhamentos: [], quantidade }];
 
@@ -34,6 +34,13 @@ test('faixa atual', () => {
   assert.equal(faixaDe(14).min, 10);
   assert.equal(faixaDe(20).min, 20);
   assert.equal(faixaDe(99).min, 20);
+});
+
+test('preço curto da escada de preços: sem "R$" e sem ",00"', () => {
+  assert.equal(formatarPrecoCurto(31), '31');
+  assert.equal(formatarPrecoCurto(25), '25');
+  assert.equal(formatarPrecoCurto(25.5), '25,50');
+  assert.equal(formatarPrecoCurto(6), '6');
 });
 
 test('formatação em reais', () => {
