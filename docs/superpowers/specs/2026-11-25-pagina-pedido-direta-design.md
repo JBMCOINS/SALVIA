@@ -1,6 +1,6 @@
 # Nova página de pedido: direta, rápida e com preços novos
 
-**Data:** 2026-11-25 · **Status:** aprovado em conversa, aguardando revisão do documento · **Branch:** `feat/pagina-pedido`
+**Data:** 2026-11-25 · **Status:** aprovado pelo usuário (2026-11-25) · **Branch:** `feat/pagina-pedido`
 
 ## Contexto
 
@@ -132,23 +132,28 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
 
 ### Direção visual
 
-- **A identidade da Sálvia continua:** verde, Outfit nos títulos e Inter no texto, para dar continuidade ao Instagram e à landing. A base de referência de UI sugeriu, para "comida", laranja e uma fonte serifada de restaurante. Descartei porque a marca já está estabelecida.
+- **Laranja e serifa de restaurante, com o verde da marca em papel secundário** (decisão do usuário, a partir da sugestão da base de referência de UI para comida).
+  - **O laranja é a cor de ação:** botões, seleção, faixa de preço atual e destaques.
+  - **O verde continua no logo**, que é verde e não muda, e nos sinais de **"deu certo"**: o check do menor preço e o aviso de item adicionado.
+  - O azul que a base também sugeria fica de fora, porque três cores fortes com o logo verde seria cor demais.
+  - **Fontes:** **Playfair Display SC** (serifada, em versalete) só no título da página e nos títulos de seção. **Karla** em todo o resto: nomes de pratos, acompanhamentos, preços, botões e campos. Versalete serifado em texto corrido e em números pequenos fica difícil de ler.
+  - A landing continua verde até a decisão sobre o destino dela.
 - **Estilo de cardápio de app de delivery:**
-  - fundo claro, cartões brancos e uma única cor de destaque, o verde;
+  - fundo branco, cartões brancos com borda e uma única cor de ação, o laranja;
   - hierarquia por tamanho e peso da fonte;
   - sai o excesso da página atual: fonte extra-negrito e rótulos minúsculos em caixa-alta espaçada, de 9 a 10 px em cinza-claro, que são difíceis de ler.
 - **Tokens em `pedido.css` (`:root`).** Nenhuma cor ou medida fica solta nos componentes.
   - **Cores:**
-    - `--verde #1B5E20`: ações e destaques;
-    - `--verde-2 #2E7D32`: pressionado;
-    - `--creme #F1F8E9`: fundos de destaque;
+    - `--laranja #C2410C`: botões e textos de ação. Branco sobre ele tem contraste de 5,3:1.
+    - `--laranja-vivo #EA580C`: só em ícones, bordas de seleção e elementos grandes. Com texto branco ele dá 3,6:1, que reprova para texto normal.
+    - `--laranja-claro #FFF7ED`: fundos de destaque, como a seção "Mais pedidos", a faixa de preço atual e o acompanhamento selecionado.
+    - `--verde #1B5E20`: sinais de "deu certo", com contraste de 7,9:1 sobre branco.
     - `--texto #1A1A1A`;
-    - `--texto-2 #4A4A4A`: secundário, contraste de 8,9:1 sobre branco;
-    - `--texto-3 #6B6B6B`: rótulos, 5,3:1;
-    - `--borda #E3E8E4`;
-    - `--fundo #FDFDFD`;
+    - `--texto-2 #4A4A4A`: secundário, 8,9:1 sobre branco;
+    - `--texto-3 #6B6B6B`: rótulos, 5,3:1 sobre branco e 5,0:1 sobre o laranja-claro;
+    - `--borda #ECE7E2`;
+    - `--fundo #FFFFFF`. O fundo da página é **branco**, e não o laranja-claro, porque o logo é um PNG com fundo branco opaco e apareceria como um retângulo sobre fundo colorido.
     - `--remover #B3261E`.
-    - O verde suave (#81C784) é só decorativo e nunca vai em texto.
   - **Tipografia:**
     - 28 px no título da página, 20 px nos títulos de seção, 17 px no nome do prato, 15 px em acompanhamentos e textos de apoio, 13 px em rótulos;
     - nada abaixo de 12 px;
@@ -181,7 +186,7 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
 - O cabeçalho do painel também é fixo, com o nome do prato, o contador (1/2) e o botão de fechar.
 - O painel ocupa no máximo ~85% da altura da tela. O fundo escurece e não rola enquanto o painel está aberto.
 - **O botão voltar do celular fecha o painel** em vez de sair do site, assim como acontece no resumo.
-- **Acompanhamento selecionado:** fundo creme, borda verde e ícone de check, para não depender só da cor. Com 2 escolhidos, os outros ficam esmaecidos e aparece a dica "Desmarque um para trocar".
+- **Acompanhamento selecionado:** fundo laranja-claro, borda laranja e ícone de check, para não depender só da cor. Com 2 escolhidos, os outros ficam esmaecidos e aparece a dica "Desmarque um para trocar".
 - **Fechar sem adicionar descarta a seleção, sem pergunta de confirmação.** Refazer custa 2 toques, e uma pergunta atrapalharia mais.
 
 ### Barra de baixo e atalhos
@@ -196,7 +201,7 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
   - usa `autocomplete="name"`;
   - tem fonte de 16 px.
 - **Botão "Enviar pedido pelo WhatsApp":**
-  - tem o ícone do WhatsApp e fica no verde da Sálvia, porque o verde do WhatsApp com texto branco não tem contraste suficiente;
+  - tem o ícone do WhatsApp e fica no laranja de ação (`--laranja`), como os outros botões principais. O verde do WhatsApp com texto branco não teria contraste suficiente;
   - logo abaixo aparece *"Você confere a mensagem no WhatsApp antes de enviar."*
 - **O envio é um link comum para o wa.me**, e não `window.open`, porque funciona melhor dentro do navegador do Instagram.
 - **Resumo vazio:** abrir `#resumo` sem itens mostra "Seu pedido está vazio" e o botão "Ver cardápio".
@@ -225,14 +230,14 @@ Antes de mostrar ao usuário, a página é conferida em 360, 375 e 414 px de lar
 
 ## Construção técnica
 
-**Sem framework e sem etapa de build:** HTML, CSS e JavaScript puro (módulos ES), servidos como arquivos estáticos pelo Netlify, como hoje. Os ícones viram SVG embutido, sem a fonte Material Symbols. As fontes Outfit e Inter continuam, carregadas só nos pesos usados. Meta: **JS + CSS próprios abaixo de 50 KB e nenhum script de terceiros.**
+**Sem framework e sem etapa de build:** HTML, CSS e JavaScript puro (módulos ES), servidos como arquivos estáticos pelo Netlify, como hoje. Os ícones viram SVG embutido, sem a fonte Material Symbols. As fontes passam a ser Playfair Display SC (700) e Karla (400, 500, 700), carregadas do Google Fonts só nos pesos usados e com `display=swap`. O logo é recortado e reduzido (hoje ele tem 1024×682 px, 148 KB e muito espaço em branco). Meta: **JS + CSS próprios abaixo de 50 KB e nenhum script de terceiros.**
 
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `cardapio.js` | **Só dados:** `PRICING_TIERS`, categorias, pratos (com `foto` opcional), grupos de acompanhamentos, `MAIS_PEDIDOS` e o número do WhatsApp. Para mudar preço ou prato no futuro, mexe só aqui. |
 | `pedido-regras.js` | **Só lógica pura, sem tela:** preço unitário, total, aviso de faixa, identificação e junção de itens, alteração de quantidade, validação do carrinho salvo e texto da mensagem. |
 | `pedido.js` | Tela: monta o HTML, trata os toques, abre e fecha o painel, troca para o resumo e salva o carrinho. |
-| `pedido.css` | Estilos com a identidade atual: verde Sálvia (#1B5E20 / #2E7D32 / #F1F8E9), cantos arredondados. |
+| `pedido.css` | Estilos a partir dos tokens de "Direção visual": laranja de ação, verde de confirmação, Playfair Display SC e Karla. |
 | `pedido.html` | Estrutura mínima que carrega os módulos acima. |
 
 Layout pensado primeiro para celular. No computador, a coluna fica centralizada com no máximo ~480 px.
