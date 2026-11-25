@@ -38,3 +38,9 @@ test('pedido.html: não bloqueia zoom nem carrega framework', () => {
   assert.ok(!/user-scalable|maximum-scale/.test(html));
   assert.ok(!/react|babel|tailwind|gsap/i.test(html));
 });
+
+test('orçamento de peso: HTML + CSS + JS próprios abaixo de 50 KB', () => {
+  const arquivos = ['pedido.html', 'pedido.css', 'pedido.js', 'pedido-regras.js', 'cardapio.js'];
+  const total = arquivos.reduce((soma, a) => soma + statSync(new URL(a, raiz)).size, 0);
+  assert.ok(total < 50 * 1024, `total ${total} bytes`);
+});

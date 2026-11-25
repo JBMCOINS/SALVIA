@@ -1,11 +1,11 @@
-/* Página de pedido. Cores e medidas só via tokens de :root (spec: "Direção visual"). */
+/* Cores e medidas só via tokens de :root. */
 :root {
-  --laranja: #C2410C;            /* ação: botões e textos de ação (branco sobre ele: 5,3:1) */
-  --laranja-escuro: #9A3412;     /* ação pressionada */
-  --laranja-vivo: #EA580C;       /* só ícones, bordas de seleção e elementos grandes */
-  --laranja-claro: #FFF7ED;      /* fundos de destaque */
+  --laranja: #C2410C;
+  --laranja-escuro: #9A3412;
+  --laranja-vivo: #EA580C;
+  --laranja-claro: #FFF7ED;
   --laranja-sobre-escuro: #FDBA74;
-  --verde: #1B5E20;              /* "deu certo" */
+  --verde: #1B5E20;
   --texto: #1A1A1A;
   --texto-2: #4A4A4A;
   --texto-3: #6B6B6B;
@@ -76,7 +76,6 @@ img { display: block; max-width: 100%; }
 .icone { width: var(--icone); height: var(--icone); flex-shrink: 0; }
 :focus-visible { outline: 3px solid var(--laranja-vivo); outline-offset: 2px; }
 
-/* ---------- Estrutura ---------- */
 .topo { max-width: var(--largura-max); margin: 0 auto; padding: var(--e-3) var(--e-4); }
 .topo img { height: var(--e-6); width: auto; }
 
@@ -86,7 +85,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .titulo-pagina { font-family: var(--fonte-titulo); font-size: var(--t-pagina); font-weight: 700; line-height: 1.15; }
 .subtitulo { margin-top: var(--e-1); font-size: var(--t-apoio); color: var(--texto-2); }
 
-/* ---------- Como funciona ---------- */
 .passos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--e-2); margin-top: var(--e-4); }
 .passos li { display: flex; align-items: center; gap: var(--e-2); font-size: var(--t-rotulo); line-height: 1.3; color: var(--texto-2); }
 .passo-num {
@@ -105,7 +103,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
   text-decoration: underline; text-underline-offset: 3px;
 }
 
-/* ---------- Faixa de preços ---------- */
 .precos { margin-top: var(--e-2); }
 .rotulo { margin-bottom: var(--e-2); font-size: var(--t-rotulo); font-weight: 500; color: var(--texto-3); }
 .faixas { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--e-1); }
@@ -120,13 +117,11 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .faixa.atual { border: 2px solid var(--laranja-vivo); background: var(--laranja-claro); padding: calc(var(--e-2) - 1px) 0; }
 .faixa.atual .faixa-preco { color: var(--laranja); }
 
-/* ---------- Seções ---------- */
 .secao { margin-top: var(--e-5); }
 .titulo-secao { font-family: var(--fonte-titulo); font-size: var(--t-secao); font-weight: 700; line-height: 1.2; }
 .apoio { margin: 2px 0 var(--e-3); font-size: var(--t-apoio); color: var(--texto-2); }
 .mais-pedidos { padding: var(--e-4); border-radius: var(--raio-cartao); background: var(--laranja-claro); }
 
-/* ---------- Cartões (mais pedidos e resumo) ---------- */
 .lista-combos, .resumo-lista { display: grid; gap: var(--e-2); }
 .combo, .resumo-item {
   display: flex; align-items: center; gap: var(--e-3);
@@ -139,7 +134,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .combo-prato { font-size: var(--t-prato); font-weight: 700; line-height: 1.3; }
 .combo-acomp { margin-top: 2px; font-size: var(--t-apoio); line-height: 1.35; color: var(--texto-2); }
 
-/* ---------- Botões ---------- */
 .botao {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--e-2);
   min-height: var(--toque); min-width: var(--toque);
@@ -171,7 +165,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .seletor { display: inline-flex; align-items: center; gap: var(--e-1); flex-shrink: 0; }
 .seletor-valor { min-width: 28px; text-align: center; font-size: var(--t-prato); font-weight: 700; }
 
-/* ---------- Atalhos e lista de pratos ---------- */
 .atalhos {
   position: sticky; top: 0; z-index: 5;
   display: flex; gap: var(--e-2);
@@ -214,7 +207,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
   background: var(--laranja-claro); color: var(--laranja);
 }
 
-/* ---------- Barra de baixo ---------- */
 .barra {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
   padding: var(--e-3) var(--e-4) calc(var(--e-3) + env(safe-area-inset-bottom));
@@ -226,11 +218,10 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .barra-textos { flex: 1; min-width: 0; }
 .barra-total { font-size: var(--t-prato); font-weight: 700; }
 .barra-aviso { display: flex; align-items: center; gap: var(--e-1); margin-top: 2px; font-size: var(--t-rotulo); line-height: 1.3; color: var(--texto-2); }
-.barra-aviso .icone { width: var(--icone-pequeno); height: var(--icone-pequeno); }
+.barra-aviso .icone, .resumo-aviso .icone { width: var(--icone-pequeno); height: var(--icone-pequeno); }
 .barra-aviso.menor-preco { color: var(--verde); font-weight: 700; }
 .barra.pulso { animation: pulso 250ms ease-out; }
 
-/* ---------- Painel de montagem ---------- */
 .painel-fundo { position: fixed; inset: 0; z-index: 30; background: var(--veu); animation: aparecer var(--duracao) ease-out; }
 .painel {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 31;
@@ -273,7 +264,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .painel-acoes { display: flex; align-items: flex-end; gap: var(--e-3); }
 .painel-qtd-rotulo { margin-bottom: 2px; font-size: var(--t-minimo); color: var(--texto-3); }
 
-/* ---------- Resumo ---------- */
 .resumo-cabeca { display: flex; align-items: center; gap: var(--e-3); margin: var(--e-4) 0; }
 .resumo-cabeca .titulo-pagina:focus { outline: none; }
 .resumo-valores { margin-top: var(--e-4); padding: var(--e-4); border-radius: var(--raio-cartao); background: var(--laranja-claro); }
@@ -285,7 +275,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
   font-size: var(--t-total); font-weight: 700; color: var(--texto);
 }
 .resumo-aviso { display: flex; align-items: center; gap: var(--e-1); margin-top: var(--e-2); font-size: var(--t-rotulo); color: var(--texto-2); }
-.resumo-aviso .icone { width: var(--icone-pequeno); height: var(--icone-pequeno); }
 .resumo-aviso.menor-preco { color: var(--verde); font-weight: 700; }
 .campo { margin-top: var(--e-5); }
 .campo label { display: block; margin-bottom: var(--e-1); font-size: var(--t-apoio); font-weight: 700; }
@@ -300,7 +289,6 @@ body.tem-barra .coluna { padding-bottom: calc(var(--espaco-barra) + env(safe-are
 .voltar-ajustar { display: flex; margin: var(--e-2) auto 0; }
 .vazio { display: grid; justify-items: center; gap: var(--e-4); margin-top: var(--e-6); text-align: center; color: var(--texto-2); }
 
-/* ---------- Aviso rápido ---------- */
 .aviso-rapido {
   position: fixed; left: var(--e-4); right: var(--e-4); z-index: 40;
   bottom: calc(var(--e-4) + env(safe-area-inset-bottom));
@@ -322,7 +310,6 @@ body.tem-barra .aviso-rapido { bottom: calc(var(--espaco-barra) + env(safe-area-
   color: var(--laranja-sobre-escuro); font-weight: 700;
 }
 
-/* ---------- Movimento ---------- */
 @keyframes subir { from { transform: translateY(100%); } }
 @keyframes aparecer { from { opacity: 0; } }
 @keyframes pulso { 50% { transform: translateY(-3px); } }
