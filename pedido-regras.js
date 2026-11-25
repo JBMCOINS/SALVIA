@@ -135,3 +135,39 @@ export function validarCarrinhoSalvo(dados) {
       quantidade: i.quantidade,
     }), []);
 }
+
+// ---------- WhatsApp ----------
+
+/** @param {string} nome @param {Item[]} itens */
+export function montarMensagem(nome, itens) {
+  const { quantidade, unitario, total } = resumoValores(itens);
+  const nomeLimpo = (nome ?? '').trim();
+  const abertura = nomeLimpo
+    ? `Meu nome é *${nomeLimpo}* e este é meu pedido personalizado:`
+    : 'Este é meu pedido personalizado:';
+  const linhas = itens.map((i) => {
+    const titulo = `- *${i.quantidade}x ${i.prato.toLocaleUpperCase('pt-BR')}*`;
+    return i.acompanhamentos.length > 0
+      ? `${titulo}\n   _(Acomp: ${i.acompanhamentos.join(' + ')})_`
+      : titulo;
+  });
+  return [
+    '*NOVO PEDIDO SÁLVIA PREMIUM*',
+    '',
+    abertura,
+    '',
+    linhas.join('\n\n'),
+    '',
+    `_Preço por unidade: ${formatarReais(unitario)}_`,
+    `*VALOR TOTAL: ${formatarReais(total)}*`,
+    `_Qtde Total: ${quantidade} marmitas_`,
+  ].join('\n');
+}
+
+export function linkPedidoWhatsApp(nome, itens) {
+  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(montarMensagem(nome, itens))}`;
+}
+
+export function linkDuvidasWhatsApp() {
+  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Olá! Tenho uma dúvida sobre a entrega.')}`;
+}
