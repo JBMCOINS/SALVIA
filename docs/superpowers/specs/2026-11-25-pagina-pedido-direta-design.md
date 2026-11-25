@@ -61,10 +61,10 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
 
 1. **Cabeçalho:** só o logo. Quantidade e total ficam apenas na barra de baixo, para não repetir a informação.
 2. **Topo:** **Monte seu pedido** / *Marmitas fit ultracongeladas para a sua semana*.
-3. **Como funciona:** ① Escolha seus pratos ② Envie pelo WhatsApp ③ Receba congelado. Abaixo, "💳 Aceitamos Alelo e Sodexo Refeição" e o link discreto *"Dúvidas sobre entrega? Fale com a gente no WhatsApp"* (wa.me sem pedido), porque os detalhes de entrega ficam fora da página por enquanto.
+3. **Como funciona** (uma linha só, com 3 passos curtos lado a lado): 1 Escolha seus pratos · 2 Envie pelo WhatsApp · 3 Receba congelado. Abaixo, "Aceitamos Alelo e Sodexo Refeição" com ícone de cartão e o link discreto *"Dúvidas sobre entrega? Fale com a gente no WhatsApp"* (wa.me sem pedido), porque os detalhes de entrega ficam fora da página por enquanto.
 4. **Preços:** **Quanto mais, menor o preço de cada uma**, com as 5 faixas lado a lado. Quando já há itens no pedido, a faixa em que ele está fica destacada.
 5. **Mais pedidos** / *Os favoritos dos clientes*: 4 cartões com a combinação escrita.
-   - O botão **+2** adiciona 2 unidades.
+   - O botão **Adicionar 2** adiciona 2 unidades. O texto evita o "+2" sozinho, que pode não ser entendido de primeira.
    - Se o combo já está no pedido, o cartão mostra o seletor de quantidade (ver "Seletor de quantidade").
 6. **Monte do seu jeito** / *Escolha a proteína e 2 acompanhamentos*.
    - Os atalhos **[Carnes] [Frangos] [Pratos únicos]** ficam fixos no topo ao rolar e só rolam a página até a seção (não são etapas).
@@ -75,7 +75,7 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
    - **Quantidade:** começa em 2, mínimo 2, nos botões [–] [+].
    - **Botão "Adicionar ao pedido":** desabilitado até haver 2 acompanhamentos, mostrando "Escolha mais N acompanhamento(s)".
    - **Prato único:** o painel tem só a quantidade.
-   - O painel fecha ao adicionar, ao tocar fora ou no X.
+   - O painel fecha ao adicionar, ao tocar fora, no X ou no **botão voltar do celular**. Comportamento detalhado em "UI, UX e design".
 8. **Barra fixa embaixo**, que aparece a partir do primeiro item:
    - "**N marmitas · R$ total**";
    - o aviso de faixa (abaixo);
@@ -83,9 +83,9 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
 9. **Resumo**: uma tela no lugar da lista, com endereço `#resumo`, para o botão voltar do celular retornar ao cardápio em vez de sair do site. Mostra:
    - a lista de itens, cada um com o seletor de quantidade;
    - o preço por unidade e o total;
-   - "💳 Aceitamos Alelo e Sodexo Refeição";
-   - o campo **Seu nome** (opcional, como hoje);
-   - o botão **Enviar pelo WhatsApp**;
+   - "Aceitamos Alelo e Sodexo Refeição", com ícone de cartão;
+   - o campo **Seu nome (opcional)**, opcional como hoje;
+   - o botão **Enviar pedido pelo WhatsApp**;
    - o link "Voltar e ajustar".
 
 ### Aviso de faixa (barra de baixo)
@@ -95,17 +95,17 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
 | 1 a 6 | "Faltam N para R$ 29,00/un" (1–4) ou "Faltam N para R$ 26,00/un" (5–6) |
 | 7 a 9 | **"Faltam N: 10 saem mais barato que 9"** |
 | 10 a 19 | "Faltam N para R$ 25,50/un" (10–14) ou "Faltam N para R$ 25,00/un" (15–19) |
-| 20 ou mais | **"Você está no menor preço: R$ 25,00/un ✓"** |
+| 20 ou mais | **"Você está no menor preço: R$ 25,00/un"**, com ícone de check |
 
 Com N = 1, o texto vai no singular: "Falta 1...".
 
 ### Seletor de quantidade (igual em todo lugar)
 
-`[–] N [+]`. O **+** soma 1. O **–** subtrai 1, e quando N = 2 aparece como lixeira e remove o item, já que o mínimo é 2 por sabor. A mesma regra vale nos cartões "Mais pedidos" e no resumo.
+`[–] N [+]`. O **+** soma 1. O **–** subtrai 1, e quando N = 2 aparece como lixeira e remove o item, já que o mínimo é 2 por sabor. Toda remoção pode ser desfeita (ver "Toque e retorno visual"). A mesma regra vale nos cartões "Mais pedidos" e no resumo.
 
 ### Combinação repetida soma na mesma linha
 
-Um item é identificado pelo **prato + os 2 acompanhamentos, sem importar a ordem**. Se o cliente adicionar de novo a mesma combinação, seja pelo painel ou pelo "+2", a quantidade soma na linha existente. Os acompanhamentos são sempre guardados e exibidos na ordem do cardápio.
+Um item é identificado pelo **prato + os 2 acompanhamentos, sem importar a ordem**. Se o cliente adicionar de novo a mesma combinação, seja pelo painel ou pelo "Adicionar 2", a quantidade soma na linha existente. Os acompanhamentos são sempre guardados e exibidos na ordem do cardápio.
 
 ### Mensagem do WhatsApp
 
@@ -127,6 +127,101 @@ _Qtde Total: 6 marmitas_
 ```
 
 Sem nome, a frase vira "Este é meu pedido personalizado:".
+
+## UI, UX e design
+
+### Direção visual
+
+- **A identidade da Sálvia continua:** verde, Outfit nos títulos e Inter no texto, para dar continuidade ao Instagram e à landing. A base de referência de UI sugeriu, para "comida", laranja e uma fonte serifada de restaurante. Descartei porque a marca já está estabelecida.
+- **Estilo de cardápio de app de delivery:**
+  - fundo claro, cartões brancos e uma única cor de destaque, o verde;
+  - hierarquia por tamanho e peso da fonte;
+  - sai o excesso da página atual: fonte extra-negrito e rótulos minúsculos em caixa-alta espaçada, de 9 a 10 px em cinza-claro, que são difíceis de ler.
+- **Tokens em `pedido.css` (`:root`).** Nenhuma cor ou medida fica solta nos componentes.
+  - **Cores:**
+    - `--verde #1B5E20`: ações e destaques;
+    - `--verde-2 #2E7D32`: pressionado;
+    - `--creme #F1F8E9`: fundos de destaque;
+    - `--texto #1A1A1A`;
+    - `--texto-2 #4A4A4A`: secundário, contraste de 8,9:1 sobre branco;
+    - `--texto-3 #6B6B6B`: rótulos, 5,3:1;
+    - `--borda #E3E8E4`;
+    - `--fundo #FDFDFD`;
+    - `--remover #B3261E`.
+    - O verde suave (#81C784) é só decorativo e nunca vai em texto.
+  - **Tipografia:**
+    - 28 px no título da página, 20 px nos títulos de seção, 17 px no nome do prato, 15 px em acompanhamentos e textos de apoio, 13 px em rótulos;
+    - nada abaixo de 12 px;
+    - campos de texto com 16 px, o que evita o zoom automático do iPhone.
+  - **Espaçamento:** escala 4 / 8 / 12 / 16 / 24 / 32, com margem lateral de 16 px.
+  - **Raios:** 12 nos botões de escolha, 16 nos cartões e 24 no painel.
+  - **Sombras:** só dois níveis, um para cartão e outro para painel e barra.
+- **Ícones em SVG embutido**, com o mesmo traço, e nenhum emoji: o cartão do vale-refeição, o check do menor preço, o X, a lixeira, o [–] e o [+], e o WhatsApp. Os números do "Como funciona" são círculos feitos em CSS.
+- `<meta name="color-scheme" content="light">`, para o modo escuro forçado de alguns Androids não inverter as cores da página.
+
+### Primeira tela
+
+- **Num celular de 375×667 (iPhone SE/8), já descontadas as barras do navegador do Instagram, o primeiro cartão de "Mais pedidos" aparece sem rolar.** Quem chega quer ver comida. Por isso o "Como funciona" é uma linha só, e os preços são uma faixa compacta, sem cartões grandes.
+- **O HTML já chega com o conteúdo fixo escrito:** cabeçalho, título, "Como funciona" e preços. O JavaScript só monta as listas. Não há tela em branco nem animação de entrada escondendo conteúdo. Hoje a página começa com tudo invisível até a animação rodar.
+
+### Toque e retorno visual
+
+- Todo elemento tocável tem **no mínimo 44×44 px e 8 px de distância** do vizinho, incluindo os botões [–] e [+].
+- Todo toque tem resposta visual em até 100 ms: um leve encolhimento ou mudança de cor.
+- **Adicionar sempre confirma, de três formas:**
+  - o cartão de "Mais pedidos" vira o seletor de quantidade na hora;
+  - a barra de baixo dá um pulso curto quando o total muda;
+  - aparece um aviso rápido, como "Picadinho ×2 adicionado", que some em 3 s.
+- **Remover tem "Desfazer".** Ao remover um item, pela lixeira ou pelo [–] no 2, aparece "Item removido · Desfazer" por 5 s. Assim ninguém perde por engano uma combinação montada com cuidado.
+- **Selo "N no pedido" no cardápio:** cada prato que já está no pedido mostra a quantidade, somando todas as combinações daquele prato.
+
+### Painel de montagem
+
+- **A quantidade e o botão "Adicionar ao pedido" ficam fixos no rodapé do painel**, e só a lista de acompanhamentos rola. Com 29 opções, sem isso o botão ficaria escondido embaixo da lista.
+- O cabeçalho do painel também é fixo, com o nome do prato, o contador (1/2) e o botão de fechar.
+- O painel ocupa no máximo ~85% da altura da tela. O fundo escurece e não rola enquanto o painel está aberto.
+- **O botão voltar do celular fecha o painel** em vez de sair do site, assim como acontece no resumo.
+- **Acompanhamento selecionado:** fundo creme, borda verde e ícone de check, para não depender só da cor. Com 2 escolhidos, os outros ficam esmaecidos e aparece a dica "Desmarque um para trocar".
+- **Fechar sem adicionar descarta a seleção, sem pergunta de confirmação.** Refazer custa 2 toques, e uma pergunta atrapalharia mais.
+
+### Barra de baixo e atalhos
+
+- A barra respeita a área de gesto do iPhone (safe area), e o fim da página tem espaço para a barra não cobrir o último prato.
+- Ao tocar num atalho ([Carnes] [Frangos] [Pratos únicos]), a página para com o título da seção visível, sem ficar escondido atrás dos atalhos fixos. Enquanto a pessoa rola, o atalho da seção visível fica marcado.
+
+### Resumo e envio
+
+- **Campo de nome:**
+  - tem rótulo visível ("Seu nome (opcional)"), e não só um texto de exemplo dentro do campo;
+  - usa `autocomplete="name"`;
+  - tem fonte de 16 px.
+- **Botão "Enviar pedido pelo WhatsApp":**
+  - tem o ícone do WhatsApp e fica no verde da Sálvia, porque o verde do WhatsApp com texto branco não tem contraste suficiente;
+  - logo abaixo aparece *"Você confere a mensagem no WhatsApp antes de enviar."*
+- **O envio é um link comum para o wa.me**, e não `window.open`, porque funciona melhor dentro do navegador do Instagram.
+- **Resumo vazio:** abrir `#resumo` sem itens mostra "Seu pedido está vazio" e o botão "Ver cardápio".
+
+### Acessibilidade e movimento
+
+- Todo texto tem contraste mínimo de 4,5:1.
+- **Leitores de tela:**
+  - botões só com ícone (X, lixeira, –, +) têm descrição;
+  - os acompanhamentos usam `aria-pressed`;
+  - o painel é um diálogo (`role="dialog"`), recebe o foco ao abrir, devolve o foco ao fechar e fecha com Esc no computador.
+- O aviso de faixa e os avisos rápidos são lidos pelo leitor de tela sem roubar o foco (`aria-live="polite"`).
+- **Animações curtas e só funcionais**, de 150 a 250 ms: o painel subindo e o pulso da barra. Elas ficam desligadas para quem ativou "reduzir movimento" no celular. Não usa GSAP.
+- O zoom do navegador nunca é bloqueado.
+
+### Verificação visual
+
+Antes de mostrar ao usuário, a página é conferida em 360, 375 e 414 px de largura (Androids e iPhones comuns) e no computador. O roteiro cobre:
+
+- adicionar um "Mais pedido";
+- montar um prato com acompanhamentos e um prato único;
+- alterar e remover itens, incluindo o Desfazer;
+- passar de 9 para 10 e de 19 para 20 marmitas;
+- abrir e fechar o painel pelo botão voltar;
+- gerar o link do WhatsApp.
 
 ## Construção técnica
 
