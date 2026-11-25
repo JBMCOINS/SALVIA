@@ -1,2 +1,4 @@
-# Documentos internos (specs/planos) nao sao paginas do site
-/docs/*  /index.html  404!
+# Documentos internos (specs/planos), testes e scripts nao sao paginas do site
+/docs/*     /index.html  404!
+/tests/*    /index.html  404!
+/scripts/*  /index.html  404!
