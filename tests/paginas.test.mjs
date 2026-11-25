@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { PRICING_TIERS } from '../cardapio.js';
 import { resumoValores, formatarReais, linkDuvidasWhatsApp } from '../pedido-regras.js';
 
@@ -41,6 +41,7 @@ test('pedido.html: não bloqueia zoom nem carrega framework', () => {
 
 test('orçamento de peso: HTML + CSS + JS próprios abaixo de 50 KB', () => {
   const arquivos = ['pedido.html', 'pedido.css', 'pedido.js', 'pedido-regras.js', 'cardapio.js'];
-  const total = arquivos.reduce((soma, a) => soma + statSync(new URL(a, raiz)).size, 0);
+  // Netlify serve o conteúdo LF guardado no git; o checkout com CRLF não deve inflar a medição.
+  const total = arquivos.reduce((soma, a) => soma + Buffer.byteLength(readFileSync(new URL(a, raiz), 'utf8').replace(/\r\n/g, '\n')), 0);
   assert.ok(total < 50 * 1024, `total ${total} bytes`);
 });

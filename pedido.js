@@ -214,6 +214,7 @@ function removerComDesfazer(chave) {
 function abrirPainel(nomePrato) {
   const prato = encontrarPrato(nomePrato);
   if (!prato) return;
+  esconderAviso();
   estado.painel = {
     prato: prato.nome,
     comAcompanhamentos: prato.comAcompanhamentos,
@@ -374,8 +375,8 @@ function renderResumo() {
 
 function mostrarTela() {
   const tela = telaAtual();
-  if (tela === 'resumo') renderResumo();
   if (tela === telaMostrada) return;
+  if (tela === 'resumo') renderResumo();
   const primeira = telaMostrada === null;
   if (tela === 'resumo' && !primeira) estado.rolagemCardapio = window.scrollY;
   if (tela === 'cardapio') navegouParaResumo = false;
