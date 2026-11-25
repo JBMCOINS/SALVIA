@@ -12,3 +12,6 @@ Desktop.ini
 
 # Outros
 .netlify/
+
+# Artefatos locais das ferramentas de IA (brainstorm, planos em execucao)
+.superpowers/
