@@ -7,6 +7,7 @@
 Quase todo cliente da Sálvia chega pelo Instagram, e quem convence é o próprio conteúdo do Instagram. Hoje a pessoa passa pela landing (`index.html`) antes de chegar ao pedido (`pedido.html`), e a landing agrega pouco. A direção agora é a página de pedido ser a entrada direta. Esta entrega melhora essa página. **A decisão sobre a landing (sai do ar, vira `/sobre` ou continua por causa do Google) fica para depois da validação**, fora deste escopo.
 
 Problemas da página atual:
+
 - **Lenta para abrir no celular.** React e ReactDOM vêm em versões de desenvolvimento, o Babel compila o código dentro do celular do cliente e o Tailwind vem pelo "play CDN". São cerca de 2 MB de scripts antes de aparecer qualquer coisa (estimativa, não medido).
 - **4 telas por sabor:** categoria → proteína → 2 acompanhamentos → quantidade. Um pedido de 20 marmitas com 6 sabores exige uns 24 toques só de navegação.
 - **O nome é pedido antes** de o cliente ver qualquer prato.
@@ -50,6 +51,7 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
 | Outros (3) | Quinoa · Cuscuz marroquino · Polenta |
 
 **Mais pedidos**, nesta ordem ("legumes" = Mix de legumes):
+
 1. Carne desfiada + Arroz com brócolis + Mix de legumes
 2. Fricassê de frango fit + Arroz branco + Mix de legumes
 3. Carne moída + Purê de mandioquinha + Lentilha
@@ -109,7 +111,7 @@ Um item é identificado pelo **prato + os 2 acompanhamentos, sem importar a orde
 
 Mesmo número (5561983693411) e mesmo formato de hoje, com duas correções: o itálico do acompanhamento (o parêntese passa a ficar dentro do itálico) e a nova linha de preço por unidade.
 
-```
+```text
 *NOVO PEDIDO SÁLVIA PREMIUM*
 
 Meu nome é *Mariana* e este é meu pedido personalizado:
