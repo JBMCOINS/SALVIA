@@ -299,7 +299,14 @@ O `_redirects` ganha `/tests/*` e `/scripts/*` com 404, como já acontece com `/
 
 ## Publicação
 
-Tudo é feito na branch `feat/pagina-pedido`. O Netlify publica a cada push na `main`, então **nada vai para a `main` sem a aprovação do usuário**, depois que ele vir a página funcionando.
+Tudo é feito na branch `feat/pagina-pedido`, com revisão no PR #1.
+
+**Correção (2026-11-25):** o site **não** publica sozinho a cada push. O deploy de produção atual veio do **Netlify CLI** (`deploy_source: cli`), e o PR não gerou pré-visualização automática. Por isso o fluxo é este:
+
+- **Pré-visualização (rascunho, fora do ar):**
+  1. `git archive HEAD | tar -x -C <pasta temporária>`, para enviar só os arquivos versionados, sem `.claude/`, `.agents/`, `.mcp.json` etc.;
+  2. `netlify deploy --no-build --dir <pasta> --site 9c616ad5-3116-4a3a-a83a-43a7e54c317c`, **sem** `--prod`.
+- **Publicação no ar:** o mesmo comando com `--prod`, rodado **só com a aprovação explícita do usuário**, a partir da `main` já com o merge.
 
 ## Fora do escopo (combinado para depois)
 
