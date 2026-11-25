@@ -50,3 +50,88 @@ export function avisoFaixa(quantidade) {
   }
   return { texto: `${inicio} para ${formatarReais(proxima.price)}/un`, menorPreco: false };
 }
+
+// ---------- Cardápio ----------
+
+const TODOS_ACOMPANHAMENTOS = GRUPOS_ACOMPANHAMENTOS.flatMap((g) => g.itens);
+
+export function encontrarPrato(nome) {
+  const prato = PRATOS.find((p) => p.nome === nome);
+  if (!prato) return null;
+  const categoria = CATEGORIAS.find((c) => c.id === prato.categoria);
+  return { ...prato, comAcompanhamentos: categoria.comAcompanhamentos };
+}
+
+export function ordenarAcompanhamentos(lista) {
+  return [...lista].sort((a, b) => TODOS_ACOMPANHAMENTOS.indexOf(a) - TODOS_ACOMPANHAMENTOS.indexOf(b));
+}
+
+export function itemValido(item) {
+  if (!item || typeof item !== 'object') return false;
+  const prato = encontrarPrato(item.prato);
+  if (!prato || !Array.isArray(item.acompanhamentos)) return false;
+  const acomp = item.acompanhamentos;
+  const esperado = prato.comAcompanhamentos ? ACOMPANHAMENTOS_POR_PRATO : 0;
+  return acomp.length === esperado
+    && new Set(acomp).size === acomp.length
+    && acomp.every((a) => TODOS_ACOMPANHAMENTOS.includes(a))
+    && Number.isInteger(item.quantidade)
+    && item.quantidade >= MIN_POR_SABOR;
+}
+
+// ---------- Carrinho ----------
+// Todas as funções devolvem um array NOVO e nunca alteram o recebido.
+
+/** @param {Item} item */
+export function chaveItem(item) {
+  return [item.prato, ...ordenarAcompanhamentos(item.acompanhamentos)].join('|');
+}
+
+/** @param {Item[]} itens @param {Item} novo */
+export function adicionarItem(itens, novo) {
+  const item = {
+    prato: novo.prato,
+    acompanhamentos: ordenarAcompanhamentos(novo.acompanhamentos),
+    quantidade: novo.quantidade,
+  };
+  const chave = chaveItem(item);
+  if (!itens.some((i) => chaveItem(i) === chave)) return [...itens, item];
+  return itens.map((i) => (chaveItem(i) === chave ? { ...i, quantidade: i.quantidade + item.quantidade } : i));
+}
+
+export function alterarQuantidade(itens, chave, delta) {
+  return itens
+    .map((i) => (chaveItem(i) === chave ? { ...i, quantidade: i.quantidade + delta } : i))
+    .filter((i) => i.quantidade >= MIN_POR_SABOR);
+}
+
+export function removerItem(itens, chave) {
+  return itens.filter((i) => chaveItem(i) !== chave);
+}
+
+export function reinserirItem(itens, item, indice) {
+  const chave = chaveItem(item);
+  if (itens.some((i) => chaveItem(i) === chave)) return adicionarItem(itens, item);
+  const copia = [...itens];
+  copia.splice(Math.min(indice, copia.length), 0, {
+    ...item,
+    acompanhamentos: ordenarAcompanhamentos(item.acompanhamentos),
+  });
+  return copia;
+}
+
+export function quantidadePorPrato(itens) {
+  return itens.reduce((mapa, i) => ({ ...mapa, [i.prato]: (mapa[i.prato] ?? 0) + i.quantidade }), {});
+}
+
+// Recebe o que veio do localStorage (qualquer coisa) e devolve só os itens válidos, já juntados.
+export function validarCarrinhoSalvo(dados) {
+  if (!Array.isArray(dados)) return [];
+  return dados
+    .filter(itemValido)
+    .reduce((itens, i) => adicionarItem(itens, {
+      prato: i.prato,
+      acompanhamentos: i.acompanhamentos,
+      quantidade: i.quantidade,
+    }), []);
+}
