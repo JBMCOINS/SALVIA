@@ -1,6 +1,6 @@
 # Nova página de pedido: direta, rápida e com preços novos
 
-**Data:** 2026-11-25 · **Status:** aprovado pelo usuário (2026-11-25) · **Branch:** `feat/pagina-pedido`
+**Data:** 2026-11-25 · **Status:** aprovado pelo usuário (2026-11-25); revisado depois de ver a página (topo enxuto, sem link de WhatsApp antes do pedido, nome em destaque) · **Branch:** `feat/pagina-pedido`
 
 ## Contexto
 
@@ -60,8 +60,12 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
 ## A página, de cima para baixo
 
 1. **Cabeçalho:** só o logo. Quantidade e total ficam apenas na barra de baixo, para não repetir a informação.
-2. **Topo:** **Monte seu pedido** / *Marmitas fit ultracongeladas para a sua semana*.
-3. **Como funciona** (uma linha só, com 3 passos curtos lado a lado): 1 Escolha seus pratos · 2 Envie pelo WhatsApp · 3 Receba congelado. Abaixo, "Aceitamos Alelo e Sodexo Refeição" com ícone de cartão e o link discreto *"Dúvidas sobre entrega? Fale com a gente no WhatsApp"* (wa.me sem pedido), porque os detalhes de entrega ficam fora da página por enquanto.
+2. **Topo:** só o título **Monte seu pedido**.
+3. **Sem bloco "Como funciona" e sem atalho para o WhatsApp** (revisão do usuário depois de ver a página). Saíram:
+   - o subtítulo, os 3 passos e o "Aceitamos Alelo e Sodexo Refeição" do topo. O vale-refeição continua no resumo, junto do total;
+   - o link "Dúvidas sobre entrega? Fale com a gente no WhatsApp".
+
+   O princípio é um pedido **muito fácil, simples e direto**. **Nenhum link de WhatsApp antes do pedido:** a dúvida chega junto com o pedido já enviado. Um link antes abre a conversa e leva ao pedido "manual" digitado no chat. Há um teste que garante isso.
 4. **Preços:** **Quanto mais, menor o preço de cada uma**, com as 5 faixas lado a lado. Quando já há itens no pedido, a faixa em que ele está fica destacada.
 5. **Mais pedidos** / *Os favoritos dos clientes*: 4 cartões com a combinação escrita.
    - O botão **Adicionar 2** adiciona 2 unidades. O texto evita o "+2" sozinho, que pode não ser entendido de primeira.
@@ -84,7 +88,12 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
    - a lista de itens, cada um com o seletor de quantidade;
    - o preço por unidade e o total;
    - "Aceitamos Alelo e Sodexo Refeição", com ícone de cartão;
-   - o campo **Seu nome (opcional)**, opcional como hoje;
+   - o campo de nome **em destaque**, num quadro com fundo laranja-claro e borda laranja:
+     - rótulo **Informe seu nome**;
+     - apoio *Assim a loja identifica seu pedido mais rápido*;
+     - exemplo "Ex.: Mariana".
+
+     Continua não obrigatório, mas sem a palavra "(opcional)", que convida a pular o campo. O nome ajuda muito quem recebe os pedidos;
    - o botão **Enviar pedido pelo WhatsApp**;
    - o link "Voltar e ajustar".
 
@@ -161,13 +170,13 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
   - **Espaçamento:** escala 4 / 8 / 12 / 16 / 24 / 32, com margem lateral de 16 px.
   - **Raios:** 12 nos botões de escolha, 16 nos cartões e 24 no painel.
   - **Sombras:** só dois níveis, um para cartão e outro para painel e barra.
-- **Ícones em SVG embutido**, com o mesmo traço, e nenhum emoji: o cartão do vale-refeição, o check do menor preço, o X, a lixeira, o [–] e o [+], e o WhatsApp. Os números do "Como funciona" são círculos feitos em CSS.
+- **Ícones em SVG embutido**, com o mesmo traço, e nenhum emoji: o cartão do vale-refeição, o check do menor preço, o X, a lixeira, o [–] e o [+], e o WhatsApp.
 - `<meta name="color-scheme" content="light">`, para o modo escuro forçado de alguns Androids não inverter as cores da página.
 
 ### Primeira tela
 
-- **Num celular de 375×667 (iPhone SE/8), já descontadas as barras do navegador do Instagram, o primeiro cartão de "Mais pedidos" aparece sem rolar.** Quem chega quer ver comida. Por isso o "Como funciona" é uma linha só, e os preços são uma faixa compacta, sem cartões grandes.
-- **O HTML já chega com o conteúdo fixo escrito:** cabeçalho, título, "Como funciona" e preços. O JavaScript só monta as listas. Não há tela em branco nem animação de entrada escondendo conteúdo. Hoje a página começa com tudo invisível até a animação rodar.
+- **Num celular de 375×667 (iPhone SE/8), já descontadas as barras do navegador do Instagram, o primeiro cartão de "Mais pedidos" aparece sem rolar.** Quem chega quer ver comida. Por isso o topo tem só o título e a faixa compacta de preços; com isso, cabem 2 cartões inteiros.
+- **O HTML já chega com o conteúdo fixo escrito:** cabeçalho, título e preços. O JavaScript só monta as listas. Não há tela em branco nem animação de entrada escondendo conteúdo. Hoje a página começa com tudo invisível até a animação rodar.
 
 ### Toque e retorno visual
 
@@ -197,7 +206,8 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
 ### Resumo e envio
 
 - **Campo de nome:**
-  - tem rótulo visível ("Seu nome (opcional)"), e não só um texto de exemplo dentro do campo;
+  - tem rótulo visível ("Informe seu nome") e texto de apoio ligado ao campo (`aria-describedby`), e não só um exemplo dentro do campo;
+  - fica em destaque (fundo laranja-claro, borda laranja) logo acima do botão de enviar;
   - usa `autocomplete="name"`;
   - tem fonte de 16 px.
 - **Botão "Enviar pedido pelo WhatsApp":**
@@ -291,6 +301,6 @@ Tudo é feito na branch `feat/pagina-pedido`. O Netlify publica a cada push na `
 
 - Destino da landing: raiz do site, `/sobre` ou continuar como está.
 - Fotos dos pratos: o espaço fica pronto, mas as fotos vêm depois.
-- Detalhes de entrega no "Como funciona": região, dias, frete, antecedência, validade e entrega ou retirada.
+- Detalhes de entrega na página (região, dias, frete, antecedência, validade, entrega ou retirada): pela revisão do usuário, a tendência é **não** pôr na página, e sim resolver na conversa depois do pedido enviado.
 - Vídeo no Higgsfield "Veja como é simples pedir" para o destaque do Instagram, e versão impressa para a loja física.
 - Métricas e analytics, e pagamento online.

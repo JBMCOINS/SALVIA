@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { PRICING_TIERS } from '../cardapio.js';
-import { resumoValores, formatarReais, linkDuvidasWhatsApp } from '../pedido-regras.js';
+import { resumoValores, formatarReais } from '../pedido-regras.js';
 
 const raiz = new URL('../', import.meta.url);
 const ler = (arquivo) => readFileSync(new URL(arquivo, raiz), 'utf8');
@@ -28,8 +28,9 @@ test('pedido.html: faixa de preços escrita no HTML bate com PRICING_TIERS', () 
   assert.equal(html.split('class="faixa"').length - 1, PRICING_TIERS.length);
 });
 
-test('pedido.html: link de dúvidas é o mesmo gerado pelas regras', () => {
-  assert.ok(ler('pedido.html').includes(`href="${linkDuvidasWhatsApp()}"`));
+test('pedido.html: nenhum atalho para o WhatsApp antes do pedido', () => {
+  // Decisão do usuário: dúvidas chegam junto com o pedido enviado, não antes (evita o pedido "manual" pela conversa).
+  assert.ok(!ler('pedido.html').includes('wa.me'));
 });
 
 test('pedido.html: não bloqueia zoom nem carrega framework', () => {

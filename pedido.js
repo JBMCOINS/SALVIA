@@ -365,8 +365,9 @@ function renderResumo() {
       <p class="info">${icone('cartao')}Aceitamos Alelo e Sodexo Refeição</p>
     </div>
     <div class="campo">
-      <label for="campo-nome">Seu nome (opcional)</label>
-      <input id="campo-nome" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="done" value="${esc(estado.nome)}">
+      <label for="campo-nome">Informe seu nome</label>
+      <p class="campo-apoio" id="campo-nome-apoio">Assim a loja identifica seu pedido mais rápido</p>
+      <input id="campo-nome" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="done" placeholder="Ex.: Mariana" aria-describedby="campo-nome-apoio" value="${esc(estado.nome)}">
     </div>
     <a class="botao botao-principal botao-whatsapp" id="link-whatsapp" href="${esc(linkPedidoWhatsApp(estado.nome, estado.itens))}">${iconeWhatsApp()}Enviar pedido pelo WhatsApp</a>
     <p class="nota">Você confere a mensagem no WhatsApp antes de enviar.</p>

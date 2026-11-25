@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { montarMensagem, linkPedidoWhatsApp, linkDuvidasWhatsApp } from '../pedido-regras.js';
+import { montarMensagem, linkPedidoWhatsApp } from '../pedido-regras.js';
 
 const itens = [
   { prato: 'Carne desfiada', acompanhamentos: ['Arroz com brócolis', 'Mix de legumes'], quantidade: 4 },
@@ -34,11 +34,4 @@ test('link do pedido aponta para o número da Sálvia com o texto codificado', (
   const link = linkPedidoWhatsApp('Mariana', itens);
   assert.ok(link.startsWith('https://wa.me/5561983693411?text='));
   assert.equal(decodeURIComponent(link.split('?text=')[1]), montarMensagem('Mariana', itens));
-});
-
-test('link de dúvidas sobre entrega', () => {
-  assert.equal(
-    linkDuvidasWhatsApp(),
-    'https://wa.me/5561983693411?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20a%20entrega.',
-  );
 });

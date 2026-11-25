@@ -167,7 +167,3 @@ export function montarMensagem(nome, itens) {
 export function linkPedidoWhatsApp(nome, itens) {
   return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(montarMensagem(nome, itens))}`;
 }
-
-export function linkDuvidasWhatsApp() {
-  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Olá! Tenho uma dúvida sobre a entrega.')}`;
-}
