@@ -75,7 +75,11 @@ Os nomes seguem a grafia atual, com só a primeira letra maiúscula.
    - Abaixo, os 18 pratos numa lista única (6 carnes, 7 frangos e 5 pratos únicos), separada por títulos de seção.
    - Cada prato tem um espaço de foto. Sem foto, o espaço não aparece e a linha fica só com o texto. Para pôr foto depois, basta preencher o campo `foto` do prato no `cardapio.js`.
 7. **Painel de montagem**: sobe de baixo ao tocar num prato.
-   - **Prato com acompanhamentos:** os 29 acompanhamentos em botões agrupados pelos 5 grupos, com contador "Escolha 2 acompanhamentos (1/2)". Depois de 2 escolhidos, os outros ficam desabilitados até um ser desmarcado.
+   - **Prato com acompanhamentos:** os 29 acompanhamentos em botões agrupados pelos 5 grupos, com uma faixa de destaque logo abaixo do nome do prato, na largura do painel, que diz o que fazer.
+     - Enquanto faltam acompanhamentos: **"Agora, escolha 2 acompanhamentos (0/2)"**, com fundo laranja e texto branco.
+     - Com os 2 escolhidos: vira **"Acompanhamentos escolhidos (2/2)"**, com fundo verde e ícone de check.
+     - Os outros acompanhamentos ficam desabilitados até um ser desmarcado.
+     - O pedido de destacar e trocar o texto foi do usuário. A troca para verde ao completar foi acrescentada para a faixa não continuar pedindo uma ação já feita.
    - **Quantidade:** começa em 2, mínimo 2, nos botões [–] [+].
    - **Botão "Adicionar ao pedido":** desabilitado até haver 2 acompanhamentos, mostrando "Escolha mais N acompanhamento(s)".
    - **Prato único:** o painel tem só a quantidade.
@@ -192,7 +196,7 @@ Sem nome, a frase vira "Este é meu pedido personalizado:".
 ### Painel de montagem
 
 - **A quantidade e o botão "Adicionar ao pedido" ficam fixos no rodapé do painel**, e só a lista de acompanhamentos rola. Com 29 opções, sem isso o botão ficaria escondido embaixo da lista.
-- O cabeçalho do painel também é fixo, com o nome do prato, o contador (1/2) e o botão de fechar.
+- O cabeçalho do painel também é fixo. Ele tem o nome do prato e o botão de fechar na mesma linha e, embaixo, a faixa laranja/verde de acompanhamentos ocupando a largura toda. A faixa é lida pelo leitor de tela a cada mudança (`aria-live="polite"`).
 - O painel ocupa no máximo ~85% da altura da tela. O fundo escurece e não rola enquanto o painel está aberto.
 - **O botão voltar do celular fecha o painel** em vez de sair do site, assim como acontece no resumo.
 - **Acompanhamento selecionado:** fundo laranja-claro, borda laranja e ícone de check, para não depender só da cor. Com 2 escolhidos, os outros ficam esmaecidos e aparece a dica "Desmarque um para trocar".

@@ -235,11 +235,9 @@ function abrirPainel(nomePrato) {
   const painel = $('painel');
   painel.innerHTML = `
     <div class="painel-cabeca">
-      <div>
-        <h2 class="painel-titulo" id="painel-titulo">${esc(prato.nome)}</h2>
-        <p class="painel-contador" id="painel-contador">${prato.comAcompanhamentos ? '' : 'Prato completo, sem acompanhamentos'}</p>
-      </div>
+      <h2 class="painel-titulo" id="painel-titulo">${esc(prato.nome)}</h2>
       <button type="button" class="botao-icone" data-acao="fechar-painel" aria-label="Fechar">${icone('fechar')}</button>
+      <p class="painel-contador${prato.comAcompanhamentos ? ' destaque' : ''}" id="painel-contador" aria-live="polite">${prato.comAcompanhamentos ? '' : 'Prato completo, sem acompanhamentos'}</p>
     </div>
     ${corpo}
     <div class="painel-rodape">
@@ -274,8 +272,12 @@ function atualizarPainel() {
   if (!p) return;
   const faltam = faltamAcompanhamentos();
   if (p.comAcompanhamentos) {
-    $('painel-contador').textContent =
-      `Escolha ${ACOMPANHAMENTOS_POR_PRATO} acompanhamentos (${p.acompanhamentos.length}/${ACOMPANHAMENTOS_POR_PRATO})`;
+    const contador = $('painel-contador');
+    const progresso = `(${p.acompanhamentos.length}/${ACOMPANHAMENTOS_POR_PRATO})`;
+    contador.classList.toggle('pronto', faltam === 0);
+    contador.innerHTML = faltam === 0
+      ? `${icone('check')}Acompanhamentos escolhidos ${progresso}`
+      : `Agora, escolha ${ACOMPANHAMENTOS_POR_PRATO} acompanhamentos ${progresso}`;
     document.querySelectorAll('#painel .chip').forEach((chip) => {
       const marcado = p.acompanhamentos.includes(chip.dataset.acomp);
       chip.setAttribute('aria-pressed', String(marcado));
